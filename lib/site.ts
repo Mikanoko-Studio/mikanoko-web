@@ -2,7 +2,11 @@
  * Studio-level facts. Everything here shows up in public copy, store
  * listings, or legal pages, so it needs to be true.
  *
- * TODO(daniel): confirm url, email, foundedYear and legalEntity before launch.
+ * Production domain is live at https://mikanoko.studio — metadataBase,
+ * canonical URLs, sitemap.xml, robots.txt and Open Graph all resolve from
+ * `url`, so it is the only place the domain is written down.
+ *
+ * TODO(daniel): confirm email, foundedYear and legalEntity before launch.
  */
 export const site = {
   name: "Mikanoko Studio",

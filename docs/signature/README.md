@@ -6,16 +6,18 @@ For `hello@mikanoko.studio` and anyone else on the domain.
 
 | file | what it is |
 | --- | --- |
-| `mikanoko-signature.html` | the signature. Open it, copy it, paste it into Gmail. |
+| *(the signature itself)* | lives at [`/signature`](https://mikanoko.studio/signature) on the site — open it and press the copy button |
 | `mark-source.html` | the source the logo PNG is rendered from |
 | `../../public/studio/signature/mikanoko-signature.png` | the logo, 660×150, displayed at 330×75 |
 
 ## Putting it in Gmail
 
-1. Open `mikanoko-signature.html` in a browser.
-2. Select all (`Cmd+A`), copy (`Cmd+C`).
-3. Gmail → Settings → See all settings → General → Signature → Create new.
-4. Paste. Save changes at the bottom of the page.
+1. Go to <https://mikanoko.studio/signature> and press **copy the signature**.
+2. Gmail → Settings → See all settings → General → Signature → Create new.
+3. Paste. Save changes at the bottom of the page.
+
+The page copies real `text/html` to the clipboard, so Gmail keeps the table and
+the inline styles instead of receiving flat text.
 
 **The logo needs the site deployed**, because it loads from
 `https://mikanoko.studio/studio/signature/mikanoko-signature.png`. If it shows

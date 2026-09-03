@@ -34,11 +34,14 @@ export const metadata: Metadata = {
     template: `%s · ${site.name}`,
   },
   description: site.description,
+  // "./" resolves against metadataBase per route, so every page gets its own
+  // canonical without repeating the domain anywhere.
+  alternates: { canonical: "./" },
   openGraph: {
     type: "website",
     siteName: site.name,
     locale: "en_GB",
-    url: site.url,
+    url: "./",
     title: site.name,
     description: site.description,
   },

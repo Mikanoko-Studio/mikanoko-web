@@ -8,6 +8,7 @@ import { StoreLinks } from "@/components/app/StoreLinks";
 import { Star } from "@/components/studio/Doodles";
 import { hasPrivacy, hasTerms } from "@/content/legal";
 import { appSlugs, getApp, statusLabel } from "@/lib/apps";
+import { site } from "@/lib/site";
 
 export function generateStaticParams() {
   return appSlugs().map((slug) => ({ slug }));
@@ -23,7 +24,15 @@ export async function generateMetadata(
   return {
     title: app.name,
     description: app.tagline,
-    openGraph: { title: app.name, description: app.tagline },
+    // openGraph replaces the parent's object rather than merging into it, so
+    // type/siteName/url have to be restated or the app pages ship without them.
+    openGraph: {
+      type: "website",
+      siteName: site.name,
+      url: "./",
+      title: app.name,
+      description: app.tagline,
+    },
   };
 }
 

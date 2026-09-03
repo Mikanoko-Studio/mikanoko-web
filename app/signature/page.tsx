@@ -47,7 +47,7 @@ export default function SignaturePage() {
           <code>{`${site.url}/studio/signature/mikanoko-signature.png`}</code>
         </p>
         <p>
-          It is exactly 330×75, the size it should appear at. Gmail renders a
+          It is exactly 330×90, the size it should appear at. Gmail renders a
           URL-inserted image at its natural size and gives you no handle to
           resize it, so this file is sized for that. Do not use the{" "}
           <code>@2x</code> file there — it will come in at double size.

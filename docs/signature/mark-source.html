@@ -3,8 +3,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@700;900&family=DM+Mono:wght@400&display=block" rel="stylesheet">
 <style>
+  /* Rendered at 2x (660x180) and shown at 330x90. The orange rule is baked in
+     rather than built as a table row: it is decorative, so nothing is lost if
+     a client blocks images, and it can never drift out of line with the card. */
   * { margin:0; padding:0; box-sizing:border-box; }
-  html,body { width:660px; height:150px; background:transparent; }
+  html,body { width:660px; height:180px; background:transparent; }
   .card {
     width:660px; height:150px;
     background:#FBF4E4;
@@ -15,6 +18,7 @@
   }
   .name { font-family:'Zen Maru Gothic',sans-serif; font-weight:900; font-size:44px; color:#2B2420; line-height:1; letter-spacing:-0.01em; }
   .kana { font-family:'DM Mono',monospace; font-size:17px; color:#7A6C61; letter-spacing:.18em; margin-top:11px; }
+  .rule { width:104px; height:6px; background:#F0722B; margin-top:24px; }
 </style></head>
 <body>
   <div class="card">
@@ -29,4 +33,5 @@
       <div class="kana">ミカノコスタジオ</div>
     </div>
   </div>
+  <div class="rule"></div>
 </body></html>

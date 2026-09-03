@@ -38,6 +38,21 @@ export default function SignaturePage() {
           <li>Paste, then Save changes at the bottom of the page.</li>
         </ol>
 
+        <h2>Adding the logo by URL instead</h2>
+        <p>
+          If you are inserting the image on its own through Gmail&apos;s{" "}
+          <strong>Add an image → Web Address (URL)</strong>, use this one:
+        </p>
+        <p>
+          <code>{`${site.url}/studio/signature/mikanoko-signature.png`}</code>
+        </p>
+        <p>
+          It is exactly 330×75, the size it should appear at. Gmail renders a
+          URL-inserted image at its natural size and gives you no handle to
+          resize it, so this file is sized for that. Do not use the{" "}
+          <code>@2x</code> file there — it will come in at double size.
+        </p>
+
         <h2>If the logo is a broken image</h2>
         <p>
           The logo loads from{" "}

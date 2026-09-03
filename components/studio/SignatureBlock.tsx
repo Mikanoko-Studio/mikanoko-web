@@ -7,6 +7,11 @@ import { site } from "@/lib/site";
  * Do NOT restyle this with Tailwind classes. Gmail strips <style> blocks and
  * classes, so anything not written inline here is lost the moment it is
  * pasted. This markup is the deliverable, not a preview of it.
+ *
+ * The image is the @2x file constrained to 330x75 in the markup, so it stays
+ * sharp on retina. The plain 330x75 file exists for Gmail's "Add an image ->
+ * Web Address" box, which renders at the file's natural size and gives you no
+ * way to resize it afterwards.
  */
 export function SignatureBlock() {
   return (
@@ -25,7 +30,7 @@ export function SignatureBlock() {
           <td style={{ padding: "0 0 12px 0" }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={`${site.url}/studio/signature/mikanoko-signature.png`}
+              src={`${site.url}/studio/signature/mikanoko-signature@2x.png`}
               alt={site.name}
               width={330}
               height={75}

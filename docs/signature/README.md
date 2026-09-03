@@ -8,7 +8,7 @@ For `hello@mikanoko.studio` and anyone else on the domain.
 | --- | --- |
 | *(the signature itself)* | lives at [`/signature`](https://mikanoko.studio/signature) on the site — open it and press the copy button |
 | `mark-source.html` | the source the logo PNG is rendered from |
-| `../../public/studio/signature/mikanoko-signature.png` | the logo, 660×150, displayed at 330×75 |
+| `../../public/studio/signature/mikanoko-signature.png` | the logo, 660×180, displayed at 330×90 |
 
 ## Putting it in Gmail
 
@@ -46,10 +46,10 @@ Edit `mark-source.html`, then:
 "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
   --headless=new --disable-gpu --hide-scrollbars \
   --virtual-time-budget=10000 --default-background-color=00000000 \
-  --window-size=660,150 \
+  --window-size=660,180 \
   --screenshot=public/studio/signature/mikanoko-signature.png \
   "file://$PWD/docs/signature/mark-source.html"
 ```
 
-It renders at 660×150 and is displayed at 330×75, so it stays sharp on retina
+It renders at 660×180 and is displayed at 330×90, so it stays sharp on retina
 screens. Keep that 2:1 ratio if you change the size.

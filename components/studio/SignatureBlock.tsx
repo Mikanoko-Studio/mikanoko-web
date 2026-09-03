@@ -8,10 +8,14 @@ import { site } from "@/lib/site";
  * classes, so anything not written inline here is lost the moment it is
  * pasted. This markup is the deliverable, not a preview of it.
  *
- * The image is the @2x file constrained to 330x75 in the markup, so it stays
- * sharp on retina. The plain 330x75 file exists for Gmail's "Add an image ->
+ * The image is the @2x file constrained to 330x90 in the markup, so it stays
+ * sharp on retina. The plain 330x90 file exists for Gmail's "Add an image ->
  * Web Address" box, which renders at the file's natural size and gives you no
  * way to resize it afterwards.
+ *
+ * The orange rule is part of the image, not a table row. It is decorative, so
+ * baking it in costs nothing when a client blocks images, and it removes a row
+ * Gmail could otherwise mangle.
  */
 export function SignatureBlock() {
   return (
@@ -27,43 +31,22 @@ export function SignatureBlock() {
     >
       <tbody>
         <tr>
-          <td style={{ padding: "0 0 12px 0" }}>
+          <td style={{ padding: "0 0 10px 0" }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={`${site.url}/studio/signature/mikanoko-signature@2x.png`}
               alt={site.name}
               width={330}
-              height={75}
+              height={90}
               style={{
                 display: "block",
                 border: 0,
                 outline: "none",
                 textDecoration: "none",
                 width: "330px",
-                height: "75px",
+                height: "90px",
               }}
             />
-          </td>
-        </tr>
-        <tr>
-          <td style={{ padding: "0 0 10px 0" }}>
-            <table cellPadding={0} cellSpacing={0} border={0} style={{ borderCollapse: "collapse" }}>
-              <tbody>
-                <tr>
-                  <td
-                    style={{
-                      width: "52px",
-                      height: "3px",
-                      backgroundColor: "#F0722B",
-                      lineHeight: "3px",
-                      fontSize: 0,
-                    }}
-                  >
-                    &nbsp;
-                  </td>
-                </tr>
-              </tbody>
-            </table>
           </td>
         </tr>
         <tr>

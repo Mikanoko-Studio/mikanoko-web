@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7fb5e3"/><stop offset="1" stop-color="#e6f0f8"/></linearGradient></defs>
+<rect width="1024" height="1024" fill="url(#sky)"/>
+<g fill="#ffffff"><ellipse cx="200" cy="820" rx="190" ry="70"/><ellipse cx="120" cy="790" rx="110" ry="60"/><ellipse cx="300" cy="785" rx="120" ry="66"/><ellipse cx="860" cy="250" rx="150" ry="58"/><ellipse cx="790" cy="222" rx="90" ry="48"/><ellipse cx="930" cy="222" rx="80" ry="44"/></g>
+<g fill="#f4b8c6">
+<path d="M150 190 Q210 120 240 200 Q170 240 150 190 Z"/><path d="M880 640 Q930 600 940 680 Q880 700 880 640 Z" transform="rotate(30 900 660)"/><path d="M120 560 Q160 500 190 560 Q140 600 120 560 Z" transform="rotate(-20 150 550)"/>
+</g>
+<g transform="translate(512 560)">
+<rect x="-330" y="-330" width="660" height="660" rx="150" fill="#33294a" transform="translate(0 22)"/>
+<rect x="-330" y="-330" width="660" height="660" rx="150" fill="#fffbf3" stroke="#33294a" stroke-width="22"/>
+<!-- Mochi, from ui/Kitty.tsx in the Shift Kitty app (100-unit canvas, mood "happy") -->
+<g transform="translate(-270 -290) scale(5.4)" stroke-linecap="round" stroke-linejoin="round">
+<path d="M14 60 C14 44 19 35 22 32 L23 9 L43 25 C47 24 53 24 57 25 L77 9 L78 32 C81 35 86 44 86 60 C86 79 70 91 50 91 C30 91 14 79 14 60 Z" fill="#fff9f0"/>
+<path d="M23 9 L43 25 C40 31 33 37 25 41 C19 44 15 49 14 56 C14 44 18 36 22 32 Z" fill="#ffc08a"/>
+<path d="M27 28 L27.5 17 L37 25 Z M73 28 L72.5 17 L63 25 Z" fill="#f06a8e"/>
+<ellipse cx="27" cy="66.5" rx="7" ry="3.5" fill="#f06a8e" opacity="0.6"/>
+<ellipse cx="73" cy="66.5" rx="7" ry="3.5" fill="#f06a8e" opacity="0.6"/>
+<path d="M28 55 Q34 47 40 55 M60 55 Q66 47 72 55 M44 70 Q47 74 50 70 Q53 74 56 70" fill="none" stroke="#33294a" stroke-width="3.5"/>
+<path d="M47 64 L53 64 L50 67.5 Z" fill="#f06a8e"/>
+<path d="M14 60 C14 44 19 35 22 32 L23 9 L43 25 C47 24 53 24 57 25 L77 9 L78 32 C81 35 86 44 86 60 C86 79 70 91 50 91 C30 91 14 79 14 60 Z" fill="none" stroke="#33294a" stroke-width="4.5"/>
+</g>
+</g>
+</svg>

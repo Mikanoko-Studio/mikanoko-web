@@ -16,6 +16,7 @@ export type LegalModule = {
 
 export const privacyDocs = {
   "kitty-kaos": () => import("./apps/kitty-kaos/privacy"),
+  "shift-kitty": () => import("./apps/shift-kitty/privacy"),
   "sock-radar": () => import("./apps/sock-radar/privacy"),
 } satisfies Record<string, () => Promise<LegalModule>>;
 

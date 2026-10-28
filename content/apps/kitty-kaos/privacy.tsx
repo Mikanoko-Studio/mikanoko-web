@@ -1,6 +1,6 @@
 import { kittyKaos } from "./app";
 
-export const effectiveDate = "2026-10-14";
+export const effectiveDate = "2026-10-15";
 
 export default function KittyKaosPrivacy() {
   return (
@@ -46,7 +46,16 @@ export default function KittyKaosPrivacy() {
       <p>
         <strong>If you&apos;re in the UK, EEA or Switzerland,</strong> the app
         asks for your consent before personalised ads, using Google&apos;s
-        consent form. You can change that choice from the app&apos;s settings.
+        consent form. You can change that choice any time in{" "}
+        <strong>Settings → Privacy Options</strong> inside the game.
+      </p>
+      <p>
+        <strong>If you&apos;re in a US state with a privacy law</strong> (such
+        as California, Virginia, Colorado, Connecticut or Texas), showing you
+        personalised ads may count as &ldquo;selling&rdquo; or
+        &ldquo;sharing&rdquo; your personal information. You can opt out in{" "}
+        <strong>Settings → Privacy Options</strong> inside the game; after
+        that, Google only shows you ads that aren&apos;t personalised.
       </p>
 
       <h2>Data stored on your device</h2>

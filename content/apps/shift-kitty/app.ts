@@ -20,7 +20,7 @@ export const shiftKitty: StudioApp = {
   support: [
     {
       q: "Where is my data kept?",
-      a: "On your phone. Shift Kitty has no account and no server of ours holding your shifts. You can export everything as a spreadsheet or a file any time, from More → Export.",
+      a: "On your phone. Shift Kitty has no account and no server of ours holding your shifts. You can export everything as a spreadsheet or a file any time, from More → Export & year summary.",
     },
     {
       q: "I got a new phone and my shifts are gone.",

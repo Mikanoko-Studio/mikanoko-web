@@ -1,6 +1,6 @@
 import { shiftKitty } from "./app";
 
-export const effectiveDate = "2026-10-28";
+export const effectiveDate = "2026-10-29";
 
 export default function ShiftKittyPrivacy() {
   return (
@@ -20,12 +20,12 @@ export default function ShiftKittyPrivacy() {
         earnings.
       </p>
       <p>
-        <strong>Crash reports.</strong> If the app crashes, it may send a crash
-        report to Sentry, our error-reporting service, so we can fix it. A
-        report contains technical details — device model, operating system,
-        app version and where in the code the crash happened. Amounts of
-        money, notes, employer names and anything else you have typed are
-        removed on your phone before a report is sent.
+        <strong>Crash reports.</strong> Shift Kitty has no crash reporting of
+        its own. If you&apos;ve chosen to share analytics with app developers
+        in your phone&apos;s settings, Apple or Google may pass us a report
+        when the app crashes — technical details such as the device model,
+        operating system, app version and where in the code it happened. None
+        of your shifts, earnings or notes are in it.
       </p>
 
       <h2>Ads</h2>

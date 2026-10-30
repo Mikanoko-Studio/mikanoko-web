@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AppIcon } from "@/components/app/AppIcon";
 import { PlatformPills } from "@/components/app/PlatformPills";
+import { ScreenshotCarousel } from "@/components/app/ScreenshotCarousel";
 import { StoreLinks } from "@/components/app/StoreLinks";
 import { Star } from "@/components/studio/Doodles";
 import { hasPrivacy, hasTerms } from "@/content/legal";
@@ -47,6 +48,9 @@ export default async function AppPage(props: PageProps<"/apps/[slug]">) {
     hasTerms(app.slug) ? { href: `/terms/${app.slug}`, label: "terms" } : null,
   ].filter(Boolean) as { href: string; label: string }[];
 
+  // Captioned screenshots get the full-width carousel; bare ones keep the simple row.
+  const showcase = app.screenshots?.some((shot) => shot.caption) ? app.screenshots : null;
+
   return (
     <article className="wrap py-12 sm:py-16">
       <Link href="/#apps" className="label text-sumi-soft hover:text-mikan">
@@ -79,6 +83,12 @@ export default async function AppPage(props: PageProps<"/apps/[slug]">) {
         </div>
       </header>
 
+      {showcase && (
+        <div className="-mx-5 mt-12 sm:-mx-8">
+          <ScreenshotCarousel shots={showcase} accent={app.accent} />
+        </div>
+      )}
+
       <div className="mt-10 grid gap-12 lg:grid-cols-[minmax(0,1fr)_18rem]">
         <div>
           <p className="max-w-xl text-lg leading-relaxed">{app.description}</p>
@@ -87,7 +97,7 @@ export default async function AppPage(props: PageProps<"/apps/[slug]">) {
             <StoreLinks app={app} />
           </div>
 
-          {app.screenshots && app.screenshots.length > 0 && (
+          {!showcase && app.screenshots && app.screenshots.length > 0 && (
             <ul className="mt-12 flex snap-x gap-4 overflow-x-auto pb-4">
               {app.screenshots.map((shot) => (
                 <li key={shot.src} className="shrink-0 snap-start">

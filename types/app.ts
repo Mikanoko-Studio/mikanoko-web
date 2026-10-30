@@ -15,6 +15,10 @@ export type AppStatus = "live" | "soon" | "resting";
 export type Screenshot = {
   src: string;
   alt: string;
+  /** A line or two under the shot, as in the store listing. Turns the row into a carousel. */
+  caption?: string;
+  /** Shows a feature only a paid tier has, so the page never implies it's free. */
+  pro?: boolean;
 };
 
 export type SupportQuestion = {

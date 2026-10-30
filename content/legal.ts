@@ -21,6 +21,7 @@ export const privacyDocs = {
 } satisfies Record<string, () => Promise<LegalModule>>;
 
 export const termsDocs = {
+  "shift-kitty": () => import("./apps/shift-kitty/terms"),
   "sock-radar": () => import("./apps/sock-radar/terms"),
 } satisfies Record<string, () => Promise<LegalModule>>;
 

@@ -46,8 +46,11 @@ export default function ShiftKittyPrivacy() {
         <strong>The ads are never personalised.</strong> Shift Kitty asks Google
         for non-personalised ads only, and it never asks to track you across
         other apps, so it does not use your device&apos;s advertising
-        identifier. Nothing about your shifts or earnings is ever shared with
-        Google or anyone else.
+        identifier. It also switches off Google&apos;s optional
+        &ldquo;publisher first-party ID&rdquo;, an identifier Google would
+        otherwise keep for this app to make its ads more relevant. Nothing
+        about your shifts or earnings is ever shared with Google or anyone
+        else.
       </p>
       <p>
         <strong>If you&apos;re in the UK, EEA or Switzerland,</strong> the app
@@ -69,6 +72,16 @@ export default function ShiftKittyPrivacy() {
         When you export your shifts or a year summary, the app makes a file and
         hands it to whatever you choose — Files, Mail, Messages — and from then
         on it&apos;s yours; we never see it.
+      </p>
+
+      <h2>Reminders</h2>
+      <p>
+        If you turn on a reminder — the nudge to log a shift, the weekly recap,
+        or quarterly tax reminders — Shift Kitty schedules it on your phone,
+        and your phone delivers it. Nothing about your reminders is sent to us
+        or to anyone else. The weekly recap shows last week&apos;s total, so it
+        can appear on your lock screen; you can turn it off in the app, or hide
+        notification previews in your phone&apos;s settings.
       </p>
 
       <h2>Purchases</h2>

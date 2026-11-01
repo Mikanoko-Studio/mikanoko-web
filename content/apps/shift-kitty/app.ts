@@ -8,7 +8,7 @@ export const shiftKitty: StudioApp = {
   description:
     "For people who work in bars, restaurants and anywhere else the money comes in tips. Log a shift on the way home — hours, tips, how the night went — and Shift Kitty works out what it really paid, tips and all, across every job you work. It shows which nights and which jobs pay best, nudges you if you forget to log, and recaps each week when it ends. Everything lives on your phone and works with no signal. Mochi the cat keeps you company.",
   status: "soon",
-  platforms: ["ios"],
+  platforms: ["ios", "android"],
   accent: "#E85A82",
   icon: "/apps/shift-kitty/icon.svg",
   supportEmail: "hello@mikanoko.studio",
@@ -19,6 +19,12 @@ export const shiftKitty: StudioApp = {
       alt: "Insights: best nights of the week, a heatmap of which night pays best at which job, and earnings by job.",
       caption: "Know which nights actually pay",
       pro: true,
+      // One iPad shot: beside the phone on wide screens, the first thing a desktop visitor sees.
+      tablet: {
+        src: "/apps/shift-kitty/screenshots/ipad/01-which-night-where.png",
+        alt: "The same insights on iPad: best nights, the heatmap of which night pays best at which job, and earnings by job.",
+        size: [2064, 2752],
+      },
     },
     {
       src: "/apps/shift-kitty/screenshots/02-month-insights.png",

@@ -12,14 +12,20 @@ type ScreenshotCarouselProps = {
   interval?: number;
 };
 
+/** A 6.7" iPhone screenshot, the size most store shots are taken at. */
+const PHONE: [number, number] = [1290, 2796];
+
 /**
- * The app's screens, one card at a time, each with its line from the store listing.
+ * The app's screens as big cards, one at a time, the way a product page shows off a device:
+ * the store listing's line as a headline on top, the phone rising out of the card below it, and
+ * the iPad beside it when the slide has one and there's room. The next card peeks in at the edge.
  *
- * Swipe or scroll it like any row (it is a native scroll-snap row underneath), or use the arrows
- * and dots. It plays on its own, and the progress fill in the current dot *is* the timer: when it
- * fills, the next card comes up, so the dot and the card can never disagree. It stops for good
- * the moment someone takes over — a swipe, an arrow, a dot — and never starts for anyone who
- * prefers reduced motion.
+ * Underneath it is a native scroll-snap row, so it swipes and scrolls like any row, and the left
+ * and right keys move it. It plays on its own: the current dot stretches into a bar that fills,
+ * and when it's full the next card comes up, so the dot and the card can never disagree. It
+ * plays from the start and keeps playing under the mouse; it stops for good the moment someone
+ * takes over (a swipe, a dot, a key) or presses pause, waits while a keyboard user is inside it,
+ * and never starts for anyone who prefers reduced motion.
  */
 export function ScreenshotCarousel({
   shots,
@@ -29,7 +35,9 @@ export function ScreenshotCarousel({
   const track = useRef<HTMLUListElement>(null);
   const [active, setActive] = useState(0);
   const [playing, setPlaying] = useState(true);
-  const [held, setHeld] = useState(false); // hovered or focused: wait, but don't give up
+  // A keyboard user tabbed into it: wait while they read, but don't give up. A mouse resting on
+  // it doesn't count, so it keeps moving under the cursor as a product page does.
+  const [held, setHeld] = useState(false);
   const motionOk = useMotionOk();
 
   const goTo = useCallback(
@@ -37,13 +45,8 @@ export function ScreenshotCarousel({
       const list = track.current;
       const slide = list?.children[index] as HTMLElement | undefined;
       if (!list || !slide) return;
-      // Centred on a phone, held to the column's edge on a wide screen: whatever the CSS snaps
-      // to, so a click and a swipe always land in the same place.
-      const start = getComputedStyle(slide).scrollSnapAlign === "start";
       list.scrollTo({
-        left: start
-          ? slide.offsetLeft - parseFloat(getComputedStyle(list).paddingLeft)
-          : slide.offsetLeft - (list.clientWidth - slide.clientWidth) / 2,
+        left: slide.offsetLeft - (list.clientWidth - slide.clientWidth) / 2,
         behavior: motionOk ? "smooth" : "auto",
       });
       setActive(index);
@@ -59,17 +62,12 @@ export function ScreenshotCarousel({
     const onScroll = () => {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
-        const first = list.children[0] as HTMLElement | undefined;
-        const start = first && getComputedStyle(first).scrollSnapAlign === "start";
-        const anchor = start
-          ? list.scrollLeft + parseFloat(getComputedStyle(list).paddingLeft)
-          : list.scrollLeft + list.clientWidth / 2;
+        const middle = list.scrollLeft + list.clientWidth / 2;
         let nearest = 0;
         let best = Infinity;
         Array.from(list.children).forEach((child, i) => {
           const el = child as HTMLElement;
-          const point = start ? el.offsetLeft : el.offsetLeft + el.clientWidth / 2;
-          const distance = Math.abs(point - anchor);
+          const distance = Math.abs(el.offsetLeft + el.clientWidth / 2 - middle);
           if (distance < best) {
             best = distance;
             nearest = i;
@@ -85,28 +83,28 @@ export function ScreenshotCarousel({
     };
   }, []);
 
+  const count = shots.length;
   const takeOver = (index: number) => {
     setPlaying(false);
-    goTo(index);
+    goTo((index + count) % count);
   };
-
   const running = playing && !held && motionOk;
-  const count = shots.length;
 
   return (
     <section
       aria-roledescription="carousel"
       aria-label="Screenshots"
-      onMouseEnter={() => setHeld(true)}
-      onMouseLeave={() => setHeld(false)}
-      onFocus={() => setHeld(true)}
+      onFocus={(e) => setHeld(e.target.matches(":focus-visible"))}
       onBlur={() => setHeld(false)}
+      onKeyDown={(e) => {
+        if (e.key === "ArrowRight") takeOver(active + 1);
+        if (e.key === "ArrowLeft") takeOver(active - 1);
+      }}
     >
       <ul
         ref={track}
-        // A phone centres one card with its neighbours peeking in; a wide screen lines the row up
-        // with the page column (.wrap: 68rem, 2rem gutters) and shows several at once.
-        className="flex snap-x snap-mandatory gap-5 overflow-x-auto pb-2 px-[calc(50%-9.5rem)] lg:scroll-px-[max(2rem,calc(50%-32rem))] lg:px-[max(2rem,calc(50%-32rem))] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        // One card centred, about the column's width, with the next one peeking in.
+        className="flex snap-x snap-mandatory gap-4 overflow-x-auto px-[max(1.25rem,calc(50%-30rem))] pb-3 sm:gap-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         onPointerDown={() => setPlaying(false)}
         onWheel={(e) => {
           if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) setPlaying(false);
@@ -118,67 +116,66 @@ export function ScreenshotCarousel({
             role="group"
             aria-roledescription="slide"
             aria-label={`${i + 1} of ${count}`}
-            className="w-[19rem] shrink-0 snap-center lg:snap-start"
+            className="w-[min(60rem,calc(100vw-2.5rem))] shrink-0 snap-center"
           >
+            {/* The house tile: plum outline, heavier along the bottom edge. */}
             <figure
-              className={`border-[2.5px] border-sumi bg-kami-deep p-4 transition-opacity duration-300 ${
-                i === active ? "opacity-100" : "opacity-60"
+              className={`flex h-full flex-col items-center overflow-hidden rounded-[2rem] border-[2.5px] border-b-[6px] border-sumi bg-kami-deep px-5 pt-8 transition-[opacity,transform] duration-500 sm:px-10 sm:pt-12 ${
+                i === active ? "opacity-100" : "scale-[0.97] opacity-50"
               }`}
             >
-              <div className="relative">
-                <Image
-                  src={shot.src}
-                  alt={shot.alt}
-                  width={1290}
-                  height={2796}
-                  sizes="17rem"
-                  loading={i < 2 ? "eager" : "lazy"}
-                  className="h-auto w-full rounded-[1.75rem] border-[2.5px] border-sumi"
-                />
-                {shot.pro && (
-                  <span
-                    className="stamp absolute -top-2 -right-2 bg-kami"
-                    style={{ color: accent }}
-                  >
-                    pro
-                  </span>
-                )}
-              </div>
+              {/* Like the store images: the paid-tier stamp sits above the line it qualifies. */}
+              {shot.pro && (
+                <span className="stamp mb-3 bg-kami" style={{ color: accent }}>
+                  pro
+                </span>
+              )}
               {shot.caption && (
-                <figcaption className="mt-4 text-center font-display text-lg font-black leading-snug">
+                <figcaption className="max-w-xl text-center font-display text-2xl font-black leading-tight text-balance sm:text-4xl">
                   {shot.caption}
                 </figcaption>
               )}
+              <div className="mt-6 flex flex-1 items-end justify-center gap-8 sm:mt-10">
+                <Phone shot={shot} eager={i < 2} />
+                {shot.tablet && (
+                  <Image
+                    src={shot.tablet.src}
+                    alt={shot.tablet.alt}
+                    width={shot.tablet.size[0]}
+                    height={shot.tablet.size[1]}
+                    sizes="26rem"
+                    loading="lazy"
+                    // Only beside the phone where there's room for both.
+                    className="hidden h-[26rem] w-auto rounded-t-[1.25rem] border-[2.5px] border-b-0 border-sumi lg:block"
+                  />
+                )}
+              </div>
             </figure>
           </li>
         ))}
       </ul>
 
       <div className="mt-6 flex items-center justify-center gap-3">
-        <ArrowButton
-          label="Previous screenshot"
-          onClick={() => takeOver((active - 1 + count) % count)}
+        <ol
+          className="flex items-center gap-2.5 rounded-full border-[2px] border-sumi bg-kami-deep px-4 py-3"
+          aria-label="Choose a screenshot"
         >
-          ‹
-        </ArrowButton>
-
-        <ol className="flex items-center gap-2" aria-label="Choose a screenshot">
           {shots.map((shot, i) => (
-            <li key={shot.src}>
+            <li key={shot.src} className="flex">
               <button
                 type="button"
                 aria-label={`Screenshot ${i + 1}: ${shot.caption ?? shot.alt}`}
                 aria-current={i === active ? "true" : undefined}
                 onClick={() => takeOver(i)}
-                className={`relative block h-2.5 overflow-hidden rounded-full border-[1.5px] border-sumi transition-[width] duration-300 ${
-                  i === active ? "w-10" : "w-2.5 bg-kami-deep hover:bg-momo"
+                className={`relative block h-2.5 overflow-hidden rounded-full transition-[width,background-color] duration-300 ${
+                  i === active ? "w-10 bg-sumi-soft/30" : "w-2.5 bg-sumi-soft/60 hover:bg-sumi"
                 }`}
               >
                 {i === active && (
                   <span
                     // Re-mounted per slide, so the fill restarts from empty each time.
                     key={`${active}-${running}`}
-                    className="absolute inset-y-0 left-0 w-full origin-left"
+                    className="absolute inset-y-0 left-0 w-full origin-left rounded-full"
                     style={{
                       backgroundColor: accent,
                       transform: running ? undefined : "scaleX(1)",
@@ -192,21 +189,14 @@ export function ScreenshotCarousel({
           ))}
         </ol>
 
-        <ArrowButton
-          label="Next screenshot"
-          onClick={() => takeOver((active + 1) % count)}
-        >
-          ›
-        </ArrowButton>
-
         {motionOk && (
           <button
             type="button"
             onClick={() => setPlaying((p) => !p)}
             aria-label={playing ? "Pause slideshow" : "Play slideshow"}
-            className="label ml-2 border-[2px] border-sumi px-3 py-1.5 hover:bg-kami-deep"
+            className="grid size-11 place-items-center rounded-full border-[2px] border-sumi bg-kami-deep hover:bg-kami"
           >
-            {playing ? "pause" : "play"}
+            {playing ? <PauseIcon /> : <PlayIcon />}
           </button>
         )}
       </div>
@@ -214,11 +204,47 @@ export function ScreenshotCarousel({
   );
 }
 
+/** The phone screenshot, cut off at the card's bottom edge like a device rising out of it. */
+function Phone({ shot, eager }: { shot: Screenshot; eager: boolean }) {
+  const [width, height] = shot.size ?? PHONE;
+  return (
+    <Image
+      src={shot.src}
+      alt={shot.alt}
+      width={width}
+      height={height}
+      sizes="14rem"
+      loading={eager ? "eager" : "lazy"}
+      className="h-[22rem] w-auto shrink-0 rounded-t-[2rem] border-[2.5px] border-b-0 border-sumi sm:h-[26rem]"
+    />
+  );
+}
+
+function PauseIcon() {
+  return (
+    <svg width="14" height="16" viewBox="0 0 14 16" aria-hidden="true">
+      <rect x="1" y="1" width="4" height="14" rx="1.5" fill="currentColor" />
+      <rect x="9" y="1" width="4" height="14" rx="1.5" fill="currentColor" />
+    </svg>
+  );
+}
+
+function PlayIcon() {
+  return (
+    <svg width="14" height="16" viewBox="0 0 14 16" aria-hidden="true">
+      <path
+        d="M2 1.8v12.4a1 1 0 0 0 1.5.86l10-6.2a1 1 0 0 0 0-1.72l-10-6.2A1 1 0 0 0 2 1.8Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
 const REDUCED = "(prefers-reduced-motion: reduce)";
 
 /**
  * Whether movement is welcome. The server says no, so nothing plays until the browser has said
- * yes — guessing "on" would autoplay for someone who asked their device not to.
+ * yes; guessing "on" would autoplay for someone who asked their device not to.
  */
 function useMotionOk(): boolean {
   return useSyncExternalStore(
@@ -229,26 +255,5 @@ function useMotionOk(): boolean {
     },
     () => !window.matchMedia(REDUCED).matches,
     () => false,
-  );
-}
-
-function ArrowButton({
-  label,
-  onClick,
-  children,
-}: {
-  label: string;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      aria-label={label}
-      onClick={onClick}
-      className="grid size-9 place-items-center border-[2px] border-sumi font-display text-xl leading-none hover:bg-kami-deep"
-    >
-      {children}
-    </button>
   );
 }

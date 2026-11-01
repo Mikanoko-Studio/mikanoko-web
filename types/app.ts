@@ -15,10 +15,14 @@ export type AppStatus = "live" | "soon" | "resting";
 export type Screenshot = {
   src: string;
   alt: string;
-  /** A line or two under the shot, as in the store listing. Turns the row into a carousel. */
+  /** The image's pixel size. Defaults to a 6.7" iPhone shot, 1290 × 2796. */
+  size?: [width: number, height: number];
+  /** The store listing's line for this shot. Turns the row into a carousel, headline on top. */
   caption?: string;
   /** Shows a feature only a paid tier has, so the page never implies it's free. */
   pro?: boolean;
+  /** The same moment on iPad, shown beside the phone on wide screens. */
+  tablet?: { src: string; alt: string; size: [width: number, height: number] };
 };
 
 export type SupportQuestion = {

@@ -7,15 +7,12 @@ export const sockRadar: StudioApp = {
   tagline: "It cannot actually find your sock. It tries.",
   description:
     "Point your phone at a room. Sock Radar sweeps, beeps, and confidently announces a direction. It is not detecting anything. You will still find the sock, because you looked. We consider this a success.",
-  status: "live",
+  status: "soon",
   platforms: ["ios", "android"],
   accent: "#EFA3B6",
   icon: "/apps/sock-radar/icon.svg",
-  // PLACEHOLDER: fictional app, fake store ids. Replace on first real release.
-  appStoreUrl: "https://apps.apple.com/app/id000000001",
-  playStoreUrl: "https://play.google.com/store/apps/details?id=studio.mikanoko.sockradar",
+  // Not built yet: no store links until it ships.
   supportEmail: "socks@mikanoko.studio",
-  releasedAt: "2026-02-14",
   facts: [
     "The beep was recorded in a stairwell.",
     "There is no radar.",

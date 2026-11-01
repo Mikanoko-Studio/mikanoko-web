@@ -13,10 +13,13 @@ type LegalShellProps = {
   children: ReactNode;
 };
 
+// Effective dates are written as plain ISO dates, which JavaScript reads as midnight UTC;
+// format them in UTC too, or anywhere west of Greenwich shows the day before.
 const dateFormat = new Intl.DateTimeFormat("en-GB", {
   day: "numeric",
   month: "long",
   year: "numeric",
+  timeZone: "UTC",
 });
 
 /**

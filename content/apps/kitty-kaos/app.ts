@@ -15,11 +15,11 @@ export const kittyKaos: StudioApp = {
   // Same order and captions as the App Store listing (catstack: store/screenshots, make captions).
   screenshots: [
     shot("01-title", "Stack the cats. They have opinions.", "The title screen: the Kitty Kaos logo, the menu, and a pile of cats spilling over the wall."),
-    shot("02-tower", "How high can you stack them?", "A tower of thirteen cats on the wall, with a long calico cat swaying in to drop."),
+    shot("02-tower", "How high can you stack them?", "A tower of thirty-two cats, with a long calico cat swaying in to drop."),
     shot("03-butterfly", "Catch the butterfly for a free Life", "A butterfly caught above the tower: +1 Life, with a burst of petals."),
     shot("04-collapse", "Gravity always wins eventually", "The tower tipping over, the cats wide-eyed with alarm."),
     shot("05-oh-no", "One Life saves the whole stack", "Oh no! card: use a Life to save the stack, or let it fall."),
-    shot("06-new-cat", "Unlock new cats as you play", "New cat! card: Pastis, a tortoiseshell, unlocked over a tall tower."),
+    shot("06-new-cat", "Unlock new cats as you play", "New cat! card: Kaju, a long calico, unlocked as the twentieth cat lands."),
     shot("07-cats", "Collect every hand-drawn cat", "The Cats screen: every cat on a shelf over the town, each with its name."),
   ],
   facts: [

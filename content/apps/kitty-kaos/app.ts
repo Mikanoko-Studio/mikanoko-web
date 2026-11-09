@@ -11,7 +11,7 @@ export const kittyKaos: StudioApp = {
   platforms: ["ios", "android"],
   accent: "#F06A8E",
   icon: "/apps/kitty-kaos/icon.png",
-  // iPhone is still in App Review; add appStoreUrl when it's out.
+  appStoreUrl: "https://apps.apple.com/app/kitty-kaos/id6813663446",
   playStoreUrl: "https://play.google.com/store/apps/details?id=studio.mikanoko.kittykaos",
   releasedAt: "2026-11-09",
   supportEmail: "hello@mikanoko.studio",
@@ -37,7 +37,7 @@ export const kittyKaos: StudioApp = {
     },
     {
       q: "Can I turn the ads off?",
-      a: "Ads only play between runs every so often, or when you choose to watch one to continue. Buying a Nine Lives pack doesn't remove them yet — that's on the list.",
+      a: "Ads only play between runs every so often, or when you choose to watch one to continue. Remove Ads, in Settings, turns off the ones between runs for good. Already bought it on another phone? Restore purchases is in Settings too.",
     },
     {
       q: "The tower fell over and it wasn't my fault.",

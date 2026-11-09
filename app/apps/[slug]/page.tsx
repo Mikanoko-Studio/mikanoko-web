@@ -8,7 +8,7 @@ import { ScreenshotCarousel } from "@/components/app/ScreenshotCarousel";
 import { StoreLinks } from "@/components/app/StoreLinks";
 import { Star } from "@/components/studio/Doodles";
 import { hasPrivacy, hasTerms } from "@/content/legal";
-import { appSlugs, getApp, statusLabel } from "@/lib/apps";
+import { appSlugs, availabilityLabel, getApp } from "@/lib/apps";
 import { site } from "@/lib/site";
 
 export function generateStaticParams() {
@@ -75,9 +75,9 @@ export default async function AppPage(props: PageProps<"/apps/[slug]">) {
             {app.tagline}
           </p>
           <div className="mt-4 flex flex-wrap items-center gap-2">
-            <PlatformPills platforms={app.platforms} />
+            <PlatformPills app={app} />
             <span className="stamp" style={{ color: app.accent }}>
-              {statusLabel[app.status]}
+              {availabilityLabel(app)}
             </span>
           </div>
         </div>

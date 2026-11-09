@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { statusLabel } from "@/lib/apps";
+import { availabilityLabel } from "@/lib/apps";
 import type { StudioApp } from "@/types/app";
 import { AppIcon } from "./AppIcon";
 
@@ -25,7 +25,7 @@ export function AppCard({ app }: { app: StudioApp }) {
             className="inline-block h-2 w-2 rounded-full"
             style={{ backgroundColor: app.status === "live" ? app.accent : "transparent", border: `1.5px solid var(--color-sumi)` }}
           />
-          {statusLabel[app.status]}
+          {availabilityLabel(app)}
         </p>
       </Link>
       <span className="peel-corner" aria-hidden="true" />

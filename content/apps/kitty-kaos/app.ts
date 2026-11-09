@@ -7,10 +7,13 @@ export const kittyKaos: StudioApp = {
   tagline: "Stack the cats. The cats have other plans.",
   description:
     "Cats drop from the top of the screen and you stack them as high as they will tolerate. They are soft, they are wobbly, and they do not respect engineering. When the tower comes down, a Life keeps your score and puts the survivors back where they were standing.",
-  status: "soon",
+  status: "live",
   platforms: ["ios", "android"],
   accent: "#F06A8E",
   icon: "/apps/kitty-kaos/icon.png",
+  // iPhone is still in App Review; add appStoreUrl when it's out.
+  playStoreUrl: "https://play.google.com/store/apps/details?id=studio.mikanoko.kittykaos",
+  releasedAt: "2026-11-09",
   supportEmail: "hello@mikanoko.studio",
   // Same order and captions as the App Store listing (catstack: store/screenshots, make captions).
   screenshots: [

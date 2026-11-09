@@ -7,10 +7,13 @@ export const shiftKitty: StudioApp = {
   tagline: "Tips, hours and shifts, logged in fifteen seconds.",
   description:
     "For people who work in bars, restaurants and anywhere else the money comes in tips. Log a shift on the way home — hours, tips, how the night went — and Shift Kitty works out what it really paid, tips and all, across every job you work. It shows which nights and which jobs pay best, nudges you if you forget to log, and recaps each week when it ends. Everything lives on your phone and works with no signal. Mochi the cat keeps you company.",
-  status: "soon",
+  status: "live",
   platforms: ["ios", "android"],
   accent: "#E85A82",
   icon: "/apps/shift-kitty/icon.svg",
+  // iPhone is still in App Review; add appStoreUrl when it's out.
+  playStoreUrl: "https://play.google.com/store/apps/details?id=studio.mikanoko.shiftkitty",
+  releasedAt: "2026-11-07",
   supportEmail: "hello@mikanoko.studio",
   // Same order and captions as the App Store listing (ind: store/screenshots).
   screenshots: [

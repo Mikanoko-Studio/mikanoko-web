@@ -2,40 +2,64 @@ import { Redis } from "@upstash/redis";
 import { BOARD_SIZE, type Run, weekKey } from "./rules";
 
 /**
- * MotoKitty's world board in Redis. One entry per device per board, holding
- * that device's best score, so one rider can't fill the board alone.
+ * MotoKitty's world board in Redis, classic arcade style: every ride is its own
+ * entry, so a ride good enough for the top ten gets its own row and its own
+ * initials, even when the same player already has rows there.
+ *
+ * Each ride has an ID: `<inverted time>:<device>`. The inverted time makes an
+ * earlier ride sort above a later one with the same score, as on a cabinet;
+ * the device part lets the server check that initials come from the phone
+ * that rode it. Ride IDs never appear in the top ten the server hands out.
  *
  * Keys:
- * - `motokitty:all` and `motokitty:week:<2026-W46>`: sorted sets, device → best.
- * - `motokitty:initials`: hash, device → three letters.
- * - `motokitty:run:<device>`: the all-time best run's details, for checking by hand.
- * - `motokitty:limit:<device>:<minute>`: runs sent this minute.
+ * - `motokitty:rides:all` and `motokitty:rides:week:<2026-W46>`: sorted sets,
+ *   ride → score, trimmed to the best [KEEP] rides.
+ * - `motokitty:rides:initials`: hash, ride → three letters, for top-ten rides.
+ * - `motokitty:ride:<ride>`: a top-ten ride's details, for checking by hand.
+ * - `motokitty:limit:<device>:<minute>`: rides sent this minute.
  */
 
-const ALL = "motokitty:all";
-const INITIALS = "motokitty:initials";
-const weekBoard = (at: Date) => `motokitty:week:${weekKey(at)}`;
+const ALL = "motokitty:rides:all";
+const INITIALS = "motokitty:rides:initials";
+const weekBoard = (at: Date) => `motokitty:rides:week:${weekKey(at)}`;
 
 /** Kept a little past its week, so last week's board can still be looked at. */
 const WEEK_KEEP_SECONDS = 21 * 24 * 60 * 60;
-/** Runs one device can send in a minute. A run lasts a few seconds at least. */
+/** Rides one device can send in a minute. A ride lasts a few seconds at least. */
 const RUNS_PER_MINUTE = 20;
+/** Rides kept on each board. A rank past this is never shown. */
+const KEEP = 100_000;
+/** Inverted times count down from here: base 36, nine digits until 5138. */
+const TIME_CEILING = 36 ** 9 - 1;
 
-/** Shown for a rider on the board who hasn't entered initials yet. */
+/** Shown for a ride on the board that hasn't had initials put on it yet. */
 const NO_INITIALS = "---";
 
 export type Board = "week" | "all";
 export type Rider = { name: string; score: number };
 
-/** Where a run landed on one board. */
+/** Where a ride landed on one board. */
 export type Placing = {
-  /** 1 is the top. Counts every other rider's best that beat this run. */
+  /** 1 is the top. A ride that ties an earlier one goes below it. */
   rank: number;
-  /** This run is the device's new best on this board and is in the top ten. */
+  /** In the top ten, so it gets initials. */
   made: boolean;
 };
 
-export type RunResult = Record<Board, Placing>;
+/**
+ * Where a ride landed. When it made a top ten, `ride` is its ID, for putting
+ * initials on it; when it made the all-time one, `board` is that top ten with
+ * this ride's row marked `you`, so the game can show it waiting for initials.
+ */
+export type RunResult = Record<Board, Placing> & {
+  ride?: string;
+  board?: (Rider & { you: boolean })[];
+};
+
+export function rideId(device: string, at: Date): string {
+  const inverted = (TIME_CEILING - at.getTime()).toString(36).padStart(9, "0");
+  return `${inverted}:${device}`;
+}
 
 let client: Redis | null = null;
 
@@ -70,28 +94,28 @@ export async function withinLimit(device: string, at: Date): Promise<boolean> {
   return Number(count) <= RUNS_PER_MINUTE;
 }
 
-/** Records a run on both boards and says where it landed. */
+/** Records a ride on both boards and says where it landed. */
 export async function record(run: Run, at: Date): Promise<RunResult> {
   const db = connected();
   const week = weekBoard(at);
-  // Read where the device stood and who beat this score, then keep the higher
-  // of the old best and this run.
-  const [allBestRaw, weekBestRaw, allAbove, weekAbove] = await db
+  const ride = rideId(run.device, at);
+  // Every ride already there with this score or more stays above this one.
+  const [allAhead, weekAhead] = await db
     .pipeline()
-    .zscore(ALL, run.device)
-    .zscore(week, run.device)
-    .zcount(ALL, `(${run.score}`, "+inf")
-    .zcount(week, `(${run.score}`, "+inf")
-    .zadd(ALL, { gt: true }, { score: run.score, member: run.device })
-    .zadd(week, { gt: true }, { score: run.score, member: run.device })
+    .zcount(ALL, run.score, "+inf")
+    .zcount(week, run.score, "+inf")
+    .zadd(ALL, { score: run.score, member: ride })
+    .zadd(week, { score: run.score, member: ride })
     .expire(week, WEEK_KEEP_SECONDS)
-    .exec<[string | null, string | null, number, number, unknown, unknown, unknown]>();
-  const allBest = allBestRaw === null ? null : Number(allBestRaw);
-  const weekBest = weekBestRaw === null ? null : Number(weekBestRaw);
+    .zremrangebyrank(ALL, 0, -(KEEP + 1))
+    .zremrangebyrank(week, 0, -(KEEP + 1))
+    .exec<[number, number, ...unknown[]]>();
 
-  const all = placing(run.score, allBest, allAbove);
-  if (allBest === null || run.score > allBest) {
-    await db.hset(`motokitty:run:${run.device}`, {
+  const all = placing(allAhead);
+  const result: RunResult = { all, week: placing(weekAhead) };
+  if (all.made || result.week.made) {
+    result.ride = ride;
+    await db.hset(`motokitty:ride:${ride}`, {
       score: run.score,
       duration: run.duration,
       seed: run.seed,
@@ -99,61 +123,71 @@ export async function record(run: Run, at: Date): Promise<RunResult> {
       at: at.toISOString(),
     });
   }
-  return { all, week: placing(run.score, weekBest, weekAbove) };
+  if (all.made) {
+    const [board] = await boards([ALL]);
+    result.board = board.map((entry) => ({ ...publicRider(entry), you: entry.ride === ride }));
+  }
+  return result;
 }
 
-function placing(score: number, best: number | null, above: number): Placing {
-  // The device's own older best doesn't push its new run down.
-  const beatenBySelf = best !== null && best > score ? 1 : 0;
-  const rank = Number(above) - beatenBySelf + 1;
-  const isBest = best === null || score > best;
-  return { rank, made: isBest && rank <= BOARD_SIZE };
+function placing(ahead: number): Placing {
+  const rank = Number(ahead) + 1;
+  return { rank, made: rank <= BOARD_SIZE };
 }
 
-/** Whether the device is on either top ten, so it may put initials there. */
-export async function isOnABoard(device: string, at: Date): Promise<boolean> {
+/**
+ * Whether [ride] was ridden on [device] and is on either top ten, so that
+ * device may put initials on it.
+ */
+export async function canName(device: string, ride: string, at: Date): Promise<boolean> {
+  if (!ride.endsWith(`:${device}`)) return false;
   const db = connected();
   const [all, week] = await db
     .pipeline()
-    .zrevrank(ALL, device)
-    .zrevrank(weekBoard(at), device)
+    .zrevrank(ALL, ride)
+    .zrevrank(weekBoard(at), ride)
     .exec<[number | null, number | null]>();
   return [all, week].some((rank) => rank !== null && Number(rank) < BOARD_SIZE);
 }
 
-export async function setInitials(device: string, initials: string): Promise<void> {
-  await connected().hset(INITIALS, { [device]: initials });
+export async function setInitials(ride: string, initials: string): Promise<void> {
+  await connected().hset(INITIALS, { [ride]: initials });
 }
 
 /** Both top tens, best first. */
 export async function top(at: Date): Promise<Record<Board, Rider[]>> {
-  const db = connected();
-  const [all, week] = await db
-    .pipeline()
-    .zrange(ALL, 0, BOARD_SIZE - 1, { rev: true, withScores: true })
-    .zrange(weekBoard(at), 0, BOARD_SIZE - 1, { rev: true, withScores: true })
-    .exec<[string[], string[]]>();
+  const [all, week] = await boards([ALL, weekBoard(at)]);
+  return { all: all.map(publicRider), week: week.map(publicRider) };
+}
 
-  const entries = (flat: string[]) => {
-    const out: { device: string; score: number }[] = [];
+type Entry = { ride: string; name: string; score: number };
+
+const publicRider = ({ name, score }: Entry): Rider => ({ name, score });
+
+/** Top tens for each sorted set in [keys], with each rider's initials. */
+async function boards(keys: string[]): Promise<Entry[][]> {
+  const db = connected();
+  const pipe = db.pipeline();
+  for (const key of keys) pipe.zrange(key, 0, BOARD_SIZE - 1, { rev: true, withScores: true });
+  const flats = await pipe.exec<string[][]>();
+
+  const lists = flats.map((flat) => {
+    const out: { ride: string; score: number }[] = [];
     for (let i = 0; i < flat.length; i += 2) {
-      out.push({ device: String(flat[i]), score: Number(flat[i + 1]) });
+      out.push({ ride: String(flat[i]), score: Number(flat[i + 1]) });
     }
     return out;
-  };
-  const allEntries = entries(all);
-  const weekEntries = entries(week);
+  });
 
-  const devices = [...new Set([...allEntries, ...weekEntries].map((e) => e.device))];
-  // With raw replies, HMGET answers with a list in the order the devices were
-  // asked for, not an object keyed by device.
+  const rides = [...new Set(lists.flat().map((e) => e.ride))];
+  // With raw replies, HMGET answers with a list in the order the rides were
+  // asked for, not an object keyed by ride.
   const found =
-    devices.length === 0
+    rides.length === 0
       ? []
-      : ((await db.hmget(INITIALS, ...devices)) as unknown as (string | null)[]);
-  const names = new Map(devices.map((device, i) => [device, found[i] ?? null]));
-  const named = (list: { device: string; score: number }[]): Rider[] =>
-    list.map(({ device, score }) => ({ name: names.get(device) ?? NO_INITIALS, score }));
-
-  return { all: named(allEntries), week: named(weekEntries) };
+      : ((await db.hmget(INITIALS, ...rides)) as unknown as (string | null)[]);
+  const names = new Map(rides.map((ride, i) => [ride, found[i] ?? null]));
+  return lists.map((list) =>
+    list.map(({ ride, score }) => ({ ride, name: names.get(ride) ?? NO_INITIALS, score })),
+  );
 }

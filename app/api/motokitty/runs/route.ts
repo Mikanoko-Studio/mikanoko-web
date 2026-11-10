@@ -3,10 +3,11 @@ import { isPlausible, parseRun } from "@/lib/motokitty/rules";
 import { guarded, json, readBody } from "../respond";
 
 /**
- * A finished MotoKitty run. Body: `{ device, score, duration, seed, version }`.
+ * A finished MotoKitty ride. Body: `{ device, score, duration, seed, version }`.
  * Answers with where it landed on each board: `{ week: { rank, made }, all: { rank, made } }`.
- * `made` means it's the device's new best and in the top ten, so the game asks
- * for initials.
+ * `made` means it's in that top ten. Then `ride` is its ID, for putting initials
+ * on it, and if it made the all-time top ten, `board` is that top ten with this
+ * ride's row marked `you`.
  */
 export async function POST(request: Request) {
   const run = parseRun(await readBody(request));

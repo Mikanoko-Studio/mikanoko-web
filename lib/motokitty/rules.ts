@@ -74,6 +74,13 @@ export function parseDevice(value: unknown): string | null {
   return typeof value === "string" && DEVICE.test(value) ? value : null;
 }
 
+const RIDE = /^[0-9a-z]{9}:[0-9a-f]{32}$/;
+
+/** A ride ID as the server hands it out, or null. */
+export function parseRide(value: unknown): string | null {
+  return typeof value === "string" && RIDE.test(value) ? value : null;
+}
+
 /**
  * Three-letter combinations we won't put on a public board. Arcade boards
  * have always had to do this. Matched exactly, A–Z only, so there's no

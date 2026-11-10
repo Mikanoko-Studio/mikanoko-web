@@ -16,11 +16,16 @@ import { BOARD_SIZE, type Run, weekKey } from "./rules";
  *   ride → score, trimmed to the best [KEEP] rides.
  * - `motokitty:rides:initials`: hash, ride → three letters, for top-ten rides.
  * - `motokitty:ride:<ride>`: a top-ten ride's details, for checking by hand.
+ * - `motokitty:rides:bests`: sorted set, device → its best score, and
+ *   `motokitty:rides:best`: hash, device → that best ride, so a phone can ask
+ *   for its best ride's place on the board.
  * - `motokitty:limit:<device>:<minute>`: rides sent this minute.
  */
 
 const ALL = "motokitty:rides:all";
 const INITIALS = "motokitty:rides:initials";
+const BESTS = "motokitty:rides:bests";
+const BEST_RIDE = "motokitty:rides:best";
 const weekBoard = (at: Date) => `motokitty:rides:week:${weekKey(at)}`;
 
 /** Kept a little past its week, so last week's board can still be looked at. */
@@ -100,7 +105,7 @@ export async function record(run: Run, at: Date): Promise<RunResult> {
   const week = weekBoard(at);
   const ride = rideId(run.device, at);
   // Every ride already there with this score or more stays above this one.
-  const [allAhead, weekAhead] = await db
+  const replies = await db
     .pipeline()
     .zcount(ALL, run.score, "+inf")
     .zcount(week, run.score, "+inf")
@@ -109,7 +114,12 @@ export async function record(run: Run, at: Date): Promise<RunResult> {
     .expire(week, WEEK_KEEP_SECONDS)
     .zremrangebyrank(ALL, 0, -(KEEP + 1))
     .zremrangebyrank(week, 0, -(KEEP + 1))
-    .exec<[number, number, ...unknown[]]>();
+    // Counts 1 only when this ride beats the device's best: a tie keeps the
+    // earlier ride, which also sits above it on the board.
+    .zadd(BESTS, { gt: true, ch: true }, { score: run.score, member: run.device })
+    .exec<unknown[]>();
+  const [allAhead, weekAhead] = replies as [number, number];
+  if (Number(replies[7]) === 1) await db.hset(BEST_RIDE, { [run.device]: ride });
 
   const all = placing(allAhead);
   const result: RunResult = { all, week: placing(weekAhead) };
@@ -128,6 +138,26 @@ export async function record(run: Run, at: Date): Promise<RunResult> {
     result.board = board.map((entry) => ({ ...publicRider(entry), you: entry.ride === ride }));
   }
   return result;
+}
+
+/** A device's best ride: its score and its place on the all-time board. */
+export type Best = { best: number | null; rank: number | null };
+
+/**
+ * The device's best ride and where it sits on the all-time board, read from
+ * the same ordered list as the top ten, so the two always agree. The rank is
+ * null when the ride has fallen past the [KEEP] rides the board holds.
+ */
+export async function best(device: string): Promise<Best> {
+  const db = connected();
+  const [score, ride] = await db
+    .pipeline()
+    .zscore(BESTS, device)
+    .hget(BEST_RIDE, device)
+    .exec<[string | null, string | null]>();
+  if (score === null || ride === null) return { best: null, rank: null };
+  const rank = await db.zrevrank(ALL, ride);
+  return { best: Number(score), rank: rank === null ? null : Number(rank) + 1 };
 }
 
 function placing(ahead: number): Placing {

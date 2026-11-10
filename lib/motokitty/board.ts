@@ -145,12 +145,15 @@ export async function top(at: Date): Promise<Record<Board, Rider[]>> {
   const weekEntries = entries(week);
 
   const devices = [...new Set([...allEntries, ...weekEntries].map((e) => e.device))];
-  const names: Record<string, string | null> =
+  // With raw replies, HMGET answers with a list in the order the devices were
+  // asked for, not an object keyed by device.
+  const found =
     devices.length === 0
-      ? {}
-      : ((await db.hmget<Record<string, string | null>>(INITIALS, ...devices)) ?? {});
+      ? []
+      : ((await db.hmget(INITIALS, ...devices)) as unknown as (string | null)[]);
+  const names = new Map(devices.map((device, i) => [device, found[i] ?? null]));
   const named = (list: { device: string; score: number }[]): Rider[] =>
-    list.map(({ device, score }) => ({ name: names[device] ?? NO_INITIALS, score }));
+    list.map(({ device, score }) => ({ name: names.get(device) ?? NO_INITIALS, score }));
 
   return { all: named(allEntries), week: named(weekEntries) };
 }

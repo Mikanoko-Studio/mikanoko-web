@@ -34,9 +34,9 @@ export default function StudioPrivacyPage() {
         forms to fill in. There is nothing here that identifies you.
       </p>
       <p>
-        The site also runs MotoKitty&apos;s world board, a small service only
+        The site also runs MOTOKITTY&apos;s world board, a small service only
         the game talks to. What it keeps is in the{" "}
-        <Link href="/privacy/motokitty">MotoKitty privacy policy</Link>.
+        <Link href="/privacy/motokitty">MOTOKITTY privacy policy</Link>.
       </p>
       <p>
         It is hosted by Vercel, who keep short-lived server logs containing IP

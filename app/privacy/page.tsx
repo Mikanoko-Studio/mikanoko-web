@@ -18,7 +18,7 @@ export default function StudioPrivacyPage() {
     <LegalShell
       title="Privacy policy"
       subject={site.name}
-      effectiveDate="2025-11-01"
+      effectiveDate="2026-11-10"
       backHref="/"
       backLabel="back to the studio"
     >
@@ -29,9 +29,14 @@ export default function StudioPrivacyPage() {
 
       <h2>This website</h2>
       <p>
-        This site is a set of static pages. It sets no cookies, runs no
-        analytics, embeds no third-party scripts, fonts or trackers, and has no
+        The pages on this site are static. They set no cookies, run no
+        analytics, embed no third-party scripts, fonts or trackers, and have no
         forms to fill in. There is nothing here that identifies you.
+      </p>
+      <p>
+        The site also runs MotoKitty&apos;s world board, a small service only
+        the game talks to. What it keeps is in the{" "}
+        <Link href="/privacy/motokitty">MotoKitty privacy policy</Link>.
       </p>
       <p>
         It is hosted by Vercel, who keep short-lived server logs containing IP

@@ -6,9 +6,8 @@ export default function MotoKittyPrivacy() {
   return (
     <>
       <p className="lede">
-        MotoKitty has no account, no ads and no analytics. The only thing that
-        leaves your phone is your score, for the world board, and it goes with
-        a random ID rather than anything about you.
+        MOTOKITTY wants your score and nothing else. No account, no analytics.
+        The score leaves your phone with a random ID, never your name.
       </p>
 
       <h2>What we collect</h2>
@@ -29,7 +28,7 @@ export default function MotoKittyPrivacy() {
       <h2>Initials</h2>
       <p>
         If a ride makes a top ten, the game asks for three letters to put next
-        to your score. They&apos;re shown to every MotoKitty player. They
+        to your score. They&apos;re shown to every MOTOKITTY player. They
         don&apos;t have to be your real initials. If a ride doesn&apos;t make a
         top ten, nothing is asked and no initials are stored.
       </p>
@@ -49,7 +48,7 @@ export default function MotoKittyPrivacy() {
 
       <h2>Offline</h2>
       <p>
-        MotoKitty plays without a connection. Offline, nothing is sent: your
+        MOTOKITTY plays without a connection. Offline, nothing is sent: your
         rides count on your own board only.
       </p>
 
@@ -75,7 +74,7 @@ export default function MotoKittyPrivacy() {
 
       <h2>Children</h2>
       <p>
-        MotoKitty collects no personal information from anyone, including
+        MOTOKITTY collects no personal information from anyone, including
         children under 13. The world board holds only scores, random IDs and
         three letters.
       </p>

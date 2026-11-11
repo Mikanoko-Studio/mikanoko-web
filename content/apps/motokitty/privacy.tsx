@@ -6,8 +6,9 @@ export default function MotoKittyPrivacy() {
   return (
     <>
       <p className="lede">
-        MOTOKITTY wants your score and nothing else. No account, no analytics.
-        The score leaves your phone with a random ID, never your name.
+        MOCHI&apos;S GOTTA PAY FOR GAS. MOTOKITTY is free, with the occasional
+        ad between rides, never while you&apos;re riding. No account. Your
+        world board score goes with a random ID, never your name.
       </p>
 
       <h2>What we collect</h2>
@@ -20,9 +21,10 @@ export default function MotoKittyPrivacy() {
       </p>
       <p>
         The ID is not your name, email address, Apple ID, Google account or
-        advertising ID, and it isn&apos;t shared with anyone. It exists so each
-        player has one entry on the board. We don&apos;t link any of this to
-        you and don&apos;t use it to track you.
+        advertising ID, and it isn&apos;t shared with anyone. It ties your rides
+        together, so the game can show your best ride and where it ranks, and so
+        only your phone can put initials on your rides. We don&apos;t link any
+        of this to you and don&apos;t use it to track you.
       </p>
 
       <h2>Initials</h2>
@@ -37,8 +39,8 @@ export default function MotoKittyPrivacy() {
       <p>
         The world board runs on this website, hosted by Vercel, with the scores
         held in a database by Upstash. Each weekly board is kept for three weeks
-        and then deleted. The all-time board keeps each player&apos;s best ride
-        for as long as the board runs. Vercel keeps short-lived server logs
+        and then deleted. The all-time board keeps the best rides for as long
+        as the board runs. Vercel keeps short-lived server logs
         with IP addresses for security, covered by{" "}
         <a href="https://vercel.com/legal/privacy-policy" rel="noreferrer">
           Vercel&apos;s privacy policy
@@ -46,10 +48,58 @@ export default function MotoKittyPrivacy() {
         . We don&apos;t store IP addresses ourselves.
       </p>
 
+      <h2>Ads</h2>
+      <p>
+        The free game is paid for by ads from Google AdMob: a full-screen ad
+        between some rides, never during one, and none in your first few rides.
+        To pick and count those ads, the Google Mobile Ads SDK collects
+        information from your device, such as your IP address, device and app
+        information, ad interactions, and diagnostic data. That information
+        goes to Google, not to us. Google describes what it does with it in{" "}
+        <a href="https://policies.google.com/technologies/partner-sites">
+          How Google uses information from sites or apps that use its services
+        </a>
+        .
+      </p>
+      <p>
+        <strong>Advertising identifier.</strong> On iPhone, the game asks for
+        permission before using your device&apos;s advertising identifier,
+        the first time an ad could show; you can change your answer any time in{" "}
+        <strong>Settings → Privacy &amp; Security → Tracking</strong>. On
+        Android, you can reset or delete your advertising ID in{" "}
+        <strong>Settings → Privacy → Ads</strong> (on some phones,{" "}
+        <strong>Settings → Google → Ads</strong>). Either way, if you opt out
+        you still get ads; they just aren&apos;t personalised.
+      </p>
+      <p>
+        <strong>If you&apos;re in the UK, EEA or Switzerland,</strong> the game
+        asks for your consent before personalised ads, using Google&apos;s
+        consent form. You can change that choice any time with{" "}
+        <strong>PRIVACY OPTIONS</strong> in the game&apos;s Settings.
+      </p>
+      <p>
+        <strong>If you&apos;re in a US state with a privacy law</strong> (such
+        as California, Virginia, Colorado, Connecticut or Texas), showing you
+        personalised ads may count as &ldquo;selling&rdquo; or
+        &ldquo;sharing&rdquo; your personal information. You can opt out with{" "}
+        <strong>PRIVACY OPTIONS</strong> in the game&apos;s Settings; after
+        that, Google only shows you ads that aren&apos;t personalised.
+      </p>
+
+      <h2>Remove Ads</h2>
+      <p>
+        Remove Ads is a one-time purchase through the App Store or Google Play.
+        It stops the ads between rides for good on that account, and nothing
+        else changes. Apple or Google handles the payment: we receive aggregate
+        sales reports and never see your name, email address or payment
+        details. RESTORE PURCHASES on the same screen brings it back on a new
+        phone.
+      </p>
+
       <h2>Offline</h2>
       <p>
-        MOTOKITTY plays without a connection. Offline, nothing is sent: your
-        rides count on your own board only.
+        MOTOKITTY plays without a connection. Offline, nothing is sent and no
+        ads show: your rides count on your own board only.
       </p>
 
       <h2>Motion sensors</h2>
@@ -61,8 +111,9 @@ export default function MotoKittyPrivacy() {
       <h2>Data stored on your device</h2>
       <p>
         Your own top ten rides, how many rides you&apos;ve had, your settings,
-        the random ID and your last initials are saved on your phone. Deleting
-        the app removes them.
+        the random ID, your last initials, whether you&apos;ve bought Remove
+        Ads, and when the last ad played are saved on your phone. Deleting the
+        app removes them; Remove Ads comes back with RESTORE PURCHASES.
       </p>
 
       <h2>Crash reports</h2>
@@ -74,9 +125,11 @@ export default function MotoKittyPrivacy() {
 
       <h2>Children</h2>
       <p>
-        MOTOKITTY collects no personal information from anyone, including
-        children under 13. The world board holds only scores, random IDs and
-        three letters.
+        MOTOKITTY is not directed at children under 13, and we don&apos;t
+        knowingly collect personal information from them. Ads are limited to
+        ones Google rates suitable for general audiences with parental
+        guidance. If you believe a child has used the game and want to ask
+        about it, email us.
       </p>
 
       <h2>Taking a score off the board</h2>

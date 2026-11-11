@@ -32,6 +32,10 @@ export const motokitty: StudioApp = {
       a: "We couldn't reach the server. Your rides still count on your own board.",
     },
     {
+      q: "I bought Remove Ads. Why am I seeing ads?",
+      a: "Your phone doesn't know about it yet, which happens on a new phone or after a reinstall. Go to Settings, tap REMOVE ADS, then RESTORE PURCHASES, signed in to the same Apple or Google account you bought it with.",
+    },
+    {
       q: "Can you take my score off the world board?",
       a: "Yes. Email us the initials, the score and roughly when you rode it, and we'll remove it.",
     },

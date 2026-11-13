@@ -33,9 +33,9 @@ export async function POST(request: Request) {
 }
 
 function authorized(header: string | null): boolean {
-  const token = process.env.KITTYKAOS_ADMIN_TOKEN;
+  const token = process.env.KITTYKAOS_ADMIN_TOKEN?.trim();
   if (!token || !header?.startsWith("Bearer ")) return false;
-  const given = Buffer.from(header.slice("Bearer ".length));
+  const given = Buffer.from(header.slice("Bearer ".length).trim());
   const wanted = Buffer.from(token);
   return given.length === wanted.length && timingSafeEqual(given, wanted);
 }

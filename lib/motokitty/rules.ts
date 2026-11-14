@@ -25,6 +25,12 @@ const DRIFT_PIXELS = 600 + VIEW_SPEED * 0.5;
 /** Longest run we believe, in seconds. Far beyond anything human. */
 const MAX_DURATION = 3 * 60 * 60;
 
+/**
+ * Highest score the board can hold. Three hours of riding is about 862,000, so
+ * no real ride gets near it; past it, [rowScore] would stop being exact.
+ */
+export const MAX_SCORE = 1_000_000;
+
 export type Run = {
   device: string;
   score: number;
@@ -45,7 +51,9 @@ export function parseRun(body: unknown): Run | null {
   const { device, score, duration, seed, version } = body as Record<string, unknown>;
   if (typeof device !== "string" || !DEVICE.test(device)) return null;
   if (typeof version !== "string" || !VERSION.test(version)) return null;
-  if (!Number.isSafeInteger(score) || (score as number) < 0) return null;
+  if (!Number.isSafeInteger(score) || (score as number) < 0 || (score as number) > MAX_SCORE) {
+    return null;
+  }
   if (!Number.isSafeInteger(seed) || (seed as number) < 0 || (seed as number) > 0xffffffff) {
     return null;
   }
@@ -74,11 +82,34 @@ export function parseDevice(value: unknown): string | null {
   return typeof value === "string" && DEVICE.test(value) ? value : null;
 }
 
-const RIDE = /^[0-9a-z]{9}:[0-9a-f]{32}$/;
+/**
+ * Which board a request is for: the real one, or the test board development
+ * builds ride on (`?board=test`), so testing never lands on the real one.
+ */
+export type Space = "live" | "test";
 
-/** A ride ID as the server hands it out, or null. */
-export function parseRide(value: unknown): string | null {
-  return typeof value === "string" && RIDE.test(value) ? value : null;
+export function spaceOf(url: string): Space {
+  return new URL(url).searchParams.get("board") === "test" ? "test" : "live";
+}
+
+/**
+ * Orders the board. Redis sorts by one number, so a row's number holds both the
+ * score and when it was ridden: higher scores first, and on a tie, whoever got
+ * there first, as on a cabinet. Exact as a double while scores stay under
+ * [MAX_SCORE]: 1,000,000 × 2³³ is under 2⁵³.
+ */
+const TIME_SLOTS = 2 ** 33;
+/** Seconds are counted from here, so they fit in [TIME_SLOTS] until 2298. */
+const EPOCH = Date.UTC(2026, 0, 1);
+
+export function rowScore(score: number, at: Date): number {
+  const seconds = Math.floor((at.getTime() - EPOCH) / 1000);
+  return score * TIME_SLOTS + (TIME_SLOTS - 1 - seconds);
+}
+
+/** The score a row's number holds. */
+export function scoreOf(row: number): number {
+  return Math.floor(row / TIME_SLOTS);
 }
 
 /**

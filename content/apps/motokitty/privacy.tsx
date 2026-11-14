@@ -1,6 +1,6 @@
 import { motokitty } from "./app";
 
-export const effectiveDate = "2026-11-10";
+export const effectiveDate = "2026-11-14";
 
 export default function MotoKittyPrivacy() {
   return (
@@ -22,25 +22,28 @@ export default function MotoKittyPrivacy() {
       <p>
         The ID is not your name, email address, Apple ID, Google account or
         advertising ID, and it isn&apos;t shared with anyone. It ties your rides
-        together, so the game can show your best ride and where it ranks, and so
-        only your phone can put initials on your rides. We don&apos;t link any
-        of this to you and don&apos;t use it to track you.
+        together, so the board keeps one entry for you with your best ride, the
+        game can show where it ranks, and only your phone can put initials on
+        it. We don&apos;t link any of this to you and don&apos;t use it to track
+        you.
       </p>
 
       <h2>Initials</h2>
       <p>
-        If a ride makes a top ten, the game asks for three letters to put next
-        to your score. They&apos;re shown to every MOTOKITTY player. They
-        don&apos;t have to be your real initials. If a ride doesn&apos;t make a
-        top ten, nothing is asked and no initials are stored.
+        When a ride is your new best and makes a top ten, the game asks you to
+        confirm three letters to put next to your score; you can also set or
+        change them any time under INITIALS in Settings. They&apos;re shown to
+        every MOTOKITTY player, and they don&apos;t have to be your real
+        initials. The server keeps the latest letters you chose, one set per
+        phone, and shows them on every board your best is on.
       </p>
 
       <h2>Where it&apos;s kept</h2>
       <p>
         The world board runs on this website, hosted by Vercel, with the scores
         held in a database by Upstash. Each weekly board is kept for three weeks
-        and then deleted. The all-time board keeps the best rides for as long
-        as the board runs. Vercel keeps short-lived server logs
+        and then deleted. The all-time board keeps each player&apos;s best ride
+        for as long as the board runs. Vercel keeps short-lived server logs
         with IP addresses for security, covered by{" "}
         <a href="https://vercel.com/legal/privacy-policy" rel="noreferrer">
           Vercel&apos;s privacy policy

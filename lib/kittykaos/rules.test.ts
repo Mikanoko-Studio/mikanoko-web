@@ -74,6 +74,9 @@ test("the filter turns away rude names however they're spelled", () => {
     "sh1t",
     "5hit",
     "big boobs",
+    "b00b",
+    "boooobs",
+    "jizz",
     "ass",
     "a55",
     "my ass",
@@ -107,6 +110,11 @@ test("the filter lets ordinary names through", () => {
     "loaf lord",
     "pickles4ever",
     "Analise",
+    "Bob",
+    "Boba",
+    "Bobby",
+    "Bobcat",
+    "Sleepy Boba",
   ]) {
     assert.equal(parseName(name), name, name);
   }

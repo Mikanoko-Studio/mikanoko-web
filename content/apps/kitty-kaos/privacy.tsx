@@ -1,6 +1,6 @@
 import { kittyKaos } from "./app";
 
-export const effectiveDate = "2026-11-13";
+export const effectiveDate = "2026-11-14";
 
 export default function KittyKaosPrivacy() {
   return (
@@ -22,10 +22,11 @@ export default function KittyKaosPrivacy() {
         identifier; it only lets the board keep one row per phone.
       </p>
       <p>
-        If you make the top 100, you can add a display name, which everyone
-        can see next to your score. It&apos;s up to you, and you don&apos;t
-        have to add one. Names go through a word filter, and anyone can report
-        a name, which we may hide or remove.
+        If you make the top 100, your row shows a name next to your score,
+        which everyone can see. The game suggests a made-up one, like
+        &ldquo;Sleepy Mochi&rdquo;, and you can keep it or type your own; you
+        never have to type anything. Names go through a word filter, and
+        anyone can report a name, which we may hide or remove.
       </p>
       <p>
         The server is hosted by Vercel and the board is stored with Upstash.

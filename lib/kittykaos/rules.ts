@@ -139,22 +139,30 @@ function single(text: string): string {
   return text.replace(/(.)\1+/g, "$1");
 }
 
-/**
- * Each word as written and with its doubled letters cut, so "fuuuck" and
- * "bolock" are caught; a cut form shorter than three letters ("kkk" → "k")
- * would catch far too much, so it's left out.
- */
-function forms(words: string[]): string[] {
-  return [...new Set(words.flatMap((word) => [word, single(word)]))].filter((w) => w.length >= 3);
+/** Runs of three or more cut to two: "booooob" → "boob". */
+function double(text: string): string {
+  return text.replace(/(.)\1{2,}/g, "$1$1");
 }
 
-const ANYWHERE_FORMS = forms(ANYWHERE);
-const WHOLE_FORMS = new Set(forms(WHOLE_WORDS));
+/**
+ * Each word as written and with its doubled letters cut, so "fuuuck" and
+ * "bolock" are caught. A cut form shorter than [shortest] is left out: inside
+ * a name, "boob" cut to "bob" would turn away Bob and Boba ([double] catches
+ * "booooob" instead), and as a whole word "kkk" cut to "k" would catch far
+ * too much.
+ */
+function forms(words: string[], shortest: number): string[] {
+  const cut = words.map(single).filter((word) => word.length >= shortest);
+  return [...new Set([...words, ...cut])];
+}
+
+const ANYWHERE_FORMS = forms(ANYWHERE, 4);
+const WHOLE_FORMS = new Set(forms(WHOLE_WORDS, 3));
 
 /** Whether a name is free of the words above, however it's spelled. */
 export function isClean(name: string): boolean {
   const whole = squash(name);
-  const spellings = [whole, single(whole)];
+  const spellings = [whole, single(whole), double(whole)];
   if (spellings.some((form) => ANYWHERE_FORMS.some((word) => form.includes(word)))) return false;
   const words = name.split(" ").map(squash);
   const candidates = [...words, ...words.map(single), ...spellings];

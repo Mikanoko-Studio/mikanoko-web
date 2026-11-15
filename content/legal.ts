@@ -23,6 +23,7 @@ export const privacyDocs = {
 
 export const termsDocs = {
   "kitty-kaos": () => import("./apps/kitty-kaos/terms"),
+  motokitty: () => import("./apps/motokitty/terms"),
   "shift-kitty": () => import("./apps/shift-kitty/terms"),
   "sock-radar": () => import("./apps/sock-radar/terms"),
 } satisfies Record<string, () => Promise<LegalModule>>;

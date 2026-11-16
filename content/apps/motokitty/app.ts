@@ -7,11 +7,13 @@ export const motokitty: StudioApp = {
   tagline: "KEEP UP OR EXPLODE. THOSE ARE THE OPTIONS.",
   description:
     "An arcade biker game. Mochi rides a desert at dusk, flat out, to a loud, dirty rock 'n' roll soundtrack. Hold anywhere to open the throttle. Tilt to turn. Fall off the back of the screen or run off the front, and it's over. One life. One score. Nobody has asked Mochi to slow down, and nobody is going to.",
-  status: "soon",
+  status: "live",
   platforms: ["ios", "android"],
   accent: "#BD5926",
   icon: "/apps/motokitty/icon.png",
-  // Not out yet: no store links until it ships.
+  // iPhone is still in App Review; add appStoreUrl when it's out.
+  playStoreUrl: "https://play.google.com/store/apps/details?id=studio.mikanoko.motokitty",
+  releasedAt: "2026-11-15",
   supportEmail: "hello@mikanoko.studio",
   facts: [
     "The road moves three screen widths a second from the very first second. It never speeds up. The road just gets meaner.",

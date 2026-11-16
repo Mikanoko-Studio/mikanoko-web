@@ -11,7 +11,7 @@ export const shiftKitty: StudioApp = {
   platforms: ["ios", "android"],
   accent: "#E85A82",
   icon: "/apps/shift-kitty/icon.svg",
-  // iPhone is still in App Review; add appStoreUrl when it's out.
+  appStoreUrl: "https://apps.apple.com/app/shift-kitty/id6828137935",
   playStoreUrl: "https://play.google.com/store/apps/details?id=studio.mikanoko.shiftkitty",
   releasedAt: "2026-11-07",
   supportEmail: "hello@mikanoko.studio",

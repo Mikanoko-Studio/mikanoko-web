@@ -11,7 +11,7 @@ export const motokitty: StudioApp = {
   platforms: ["ios", "android"],
   accent: "#BD5926",
   icon: "/apps/motokitty/icon.png",
-  // iPhone is still in App Review; add appStoreUrl when it's out.
+  appStoreUrl: "https://apps.apple.com/app/motokitty/id6831871561",
   playStoreUrl: "https://play.google.com/store/apps/details?id=studio.mikanoko.motokitty",
   releasedAt: "2026-11-15",
   supportEmail: "hello@mikanoko.studio",

@@ -17,7 +17,11 @@ export const MAX_SCORE = 2_000;
 /** Longest name on the board. */
 export const NAME_LENGTH = 12;
 
-/** What the board shows for a player who hasn't named themselves, or was hidden. */
+/**
+ * The name nobody can choose. The board never shows it now (an unnamed row
+ * gets [suggestedName]), but older games grey it out and the name box turns
+ * it away.
+ */
 export const NO_NAME = "A Kitten";
 
 export type Run = {
@@ -49,6 +53,30 @@ export function isPlausible(run: Run): boolean {
 
 export function parseDevice(value: unknown): string | null {
   return typeof value === "string" && DEVICE.test(value) ? value : null;
+}
+
+/** Must match SUGGESTED_FIRST in the game's scripts/top_kittens_rule.gd. */
+const SUGGESTED_FIRST = [
+  "Sleepy", "Fluffy", "Comfy", "Tiny", "Sunny", "Snug", "Happy", "Lucky", "Fuzzy", "Chubby",
+  "Sweet", "Cozy", "Silly", "Zoomy", "Purry", "Soft", "Little", "Brave", "Bouncy", "Wiggly",
+  "Dozy", "Floofy", "Cheeky", "Toasty", "Peachy", "Mellow", "Bubbly", "Breezy", "Jolly", "Dreamy",
+];
+/** Must match SUGGESTED_LAST in the game's scripts/top_kittens_rule.gd. */
+const SUGGESTED_LAST = [
+  "Mochi", "Loaf", "Udon", "Bean", "Paws", "Tofu", "Miso", "Neko", "Kitty", "Boba", "Puff",
+  "Sushi", "Dango", "Peach", "Toast", "Nori", "Yuzu", "Momo", "Taro", "Bun", "Purr", "Nap",
+  "Soda", "Kit",
+];
+
+/**
+ * The name a row shows before its phone picks one ("Sleepy Mochi"): the same
+ * one the game's name box offers that phone (TopKittensRule.suggested_name),
+ * so a 1.0.2 row, or a hidden one, reads like any other.
+ */
+export function suggestedName(player: string): string {
+  const first = parseInt(player.slice(0, 6), 16) % SUGGESTED_FIRST.length;
+  const last = parseInt(player.slice(6, 12), 16) % SUGGESTED_LAST.length;
+  return `${SUGGESTED_FIRST[first]} ${SUGGESTED_LAST[last]}`;
 }
 
 export function parsePlayer(value: unknown): string | null {

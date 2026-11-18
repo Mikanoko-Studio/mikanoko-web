@@ -6,7 +6,7 @@
  *
  *   pnpm kittykaos top                # the board as the game shows it
  *   pnpm kittykaos reported           # the most reported names
- *   pnpm kittykaos quiet <player>     # hide a name for good ("A Kitten")
+ *   pnpm kittykaos quiet <player>     # hide a name for good (shows its suggested name)
  *   pnpm kittykaos ban <player>       # take a player off the board for good
  *
  * <player> is the 12-digit ID shown by `top` and `reported`. KITTYKAOS_SITE

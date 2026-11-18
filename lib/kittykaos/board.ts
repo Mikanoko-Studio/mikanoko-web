@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { Redis } from "@upstash/redis";
-import { BOARD_SIZE, NO_NAME, type Run, catsOf, rowScore } from "./rules";
+import { BOARD_SIZE, type Run, catsOf, rowScore, suggestedName } from "./rules";
 
 /**
  * Kitty Kaos's Top Kittens board in Redis: one row per phone, holding its best
@@ -14,8 +14,8 @@ import { BOARD_SIZE, NO_NAME, type Run, catsOf, rowScore } from "./rules";
  * - `kittykaos:board`: sorted set, device → [rowScore] (cats, then earliest).
  * - `kittykaos:names`: hash, device → name.
  * - `kittykaos:players`: hash, player ID → device, for reports and hiding.
- * - `kittykaos:quiet`: set of devices whose names were hidden; they show as
- *   [NO_NAME] and can't name themselves again.
+ * - `kittykaos:quiet`: set of devices whose names were hidden; they show their
+ *   [suggestedName] and can't name themselves again.
  * - `kittykaos:banned`: set of devices whose runs no longer count.
  * - `kittykaos:reports`: sorted set, player ID → times reported.
  * - `kittykaos:limit:<kind>:<device>:<minute>`: requests this minute.
@@ -149,7 +149,12 @@ export async function setName(device: string, name: string): Promise<void> {
   await connected().hset(NAMES, { [device]: name });
 }
 
-/** The top [BOARD_SIZE], best first, each with its name. */
+/**
+ * The top [BOARD_SIZE], best first, each with its name. A row with none (a
+ * 1.0.2 phone that never picked one, or a hidden name) gets its
+ * [suggestedName]. Only here: /me and /runs still say "no name", so the game
+ * keeps offering the name box.
+ */
 export async function top(): Promise<Kitten[]> {
   const db = connected();
   const flat = await db.zrange<string[]>(BOARD, 0, BOARD_SIZE - 1, { rev: true, withScores: true });
@@ -164,11 +169,11 @@ export async function top(): Promise<Kitten[]> {
   pipe.hmget(NAMES, ...devices);
   pipe.smismember(QUIET, devices);
   const [names, quiet] = (await pipe.exec()) as unknown as [(string | null)[], number[]];
-  return rows.map((row, i) => ({
-    player: playerId(row.device),
-    name: Number(quiet[i]) === 1 ? NO_NAME : (names[i] ?? NO_NAME),
-    score: row.score,
-  }));
+  return rows.map((row, i) => {
+    const player = playerId(row.device);
+    const name = Number(quiet[i]) === 1 ? null : names[i];
+    return { player, name: name ?? suggestedName(player), score: row.score };
+  });
 }
 
 /** Notes a report against a player's name. False if there's no such player. */
@@ -191,7 +196,7 @@ export async function reported(count = 20): Promise<(Kitten & { reports: number 
     const row = await mine(device);
     out.push({
       player,
-      name: row.name ?? NO_NAME,
+      name: row.name ?? suggestedName(player),
       score: row.best ?? 0,
       reports: Number(flat[i + 1]),
     });
@@ -199,7 +204,7 @@ export async function reported(count = 20): Promise<(Kitten & { reports: number 
   return out;
 }
 
-/** Hides a player's name for good: it shows as [NO_NAME] and can't be changed. */
+/** Hides a player's name for good: it shows as [suggestedName] and can't be changed. */
 export async function quiet(player: string): Promise<boolean> {
   const db = connected();
   const device = await db.hget<string>(PLAYERS, player);

@@ -9,6 +9,7 @@ import {
   parsePlayer,
   parseRun,
   rowScore,
+  suggestedName,
 } from "./rules.ts";
 
 const DEVICE = "0123456789abcdef0123456789abcdef";
@@ -124,4 +125,12 @@ test("player IDs are twelve hex digits", () => {
   assert.equal(parsePlayer("0123456789ab"), "0123456789ab");
   assert.equal(parsePlayer(DEVICE), null);
   assert.equal(parsePlayer("0123456789AB"), null);
+});
+
+test("an unnamed row gets the name the game's name box offers that phone", () => {
+  // From the game: TopKittensRule.player_id and suggested_name for four devices.
+  assert.equal(suggestedName("a4f7ffbbedc8"), "Floofy Mochi"); // 0123…cdef
+  assert.equal(suggestedName("fe851a950434"), "Fuzzy Paws"); // ffff…ffff
+  assert.equal(suggestedName("cbc82b0905ad"), "Cozy Peach"); // 0000…0000
+  assert.equal(suggestedName("7ae7087801c2"), "Little Taro"); // a1b2…8f90
 });
